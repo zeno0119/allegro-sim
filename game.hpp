@@ -1,40 +1,44 @@
-#include <vector>
 #include "astar.hpp"
+#include "maps/tile.hpp"
+#include "maps/works.hpp"
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_primitives.h>
 #include <iostream>
+#include <vector>
 
-class Map{
-    private:
+class Map {
+  private:
     pos2d size;
-    public:
-    std::vector<int> map;
-    Map(int x, int y){
-        this->map = std::vector<int>(x * y);
+
+  public:
+    std::vector<Tile> map;
+    Map(int x, int y) {
+        this->map;
         this->size = pos2d(x, y);
-        for(int i = 0;i < size.x * size.y;i++){
-            map[i] = 0;
+        for (int i = 0; i < size.x * size.y; i++) {
+            map.push_back(Tile(true, 1, "", false));
         }
     }
-    bool put(pos2d pos, int type);
+    bool put(pos2d pos, Tile t);
 
     void draw();
 
-    pos2d dim(){
-        return this->size;
-    }
+    pos2d dim() { return this->size; }
 
-    int type(pos2d pos);
+    Tile type(pos2d pos);
+    Tile type(int x, int y);
 };
 
-class Agent{
-    public:
-    pos2d step(Map *map);
-    Agent(pos2d pos){
+class Agent {
+  public:
+    pos2d step(Map *map, std::vector<Work> *works);
+    Agent(pos2d pos) {
         this->pos = pos;
+        on_move = false;
     }
+    Work alloc_work;
 
-    private:
+  private:
     std::stack<pos2d> move_stack;
     bool on_move;
     pos2d pos;
